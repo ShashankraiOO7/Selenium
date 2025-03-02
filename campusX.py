@@ -1,3 +1,5 @@
+#Selenium use here for Automation 
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -16,7 +18,7 @@ options.add_argument('--ssl-version-min=tls1.2')
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36")
 options.add_argument("--disable-blink-features=AutomationControlled")
 
-# ChromeDriver setup
+# ChromeDriver setup can download from net and use it
 s = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=s, options=options)
 

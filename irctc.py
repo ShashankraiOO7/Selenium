@@ -5,6 +5,11 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import time
+from PIL import Image
+import pytesseract
+import cv2
+
+pytesseract.pytesseract.tesseract_cmd = r'C:/Program Files/Tesseract-OCR/tesseract.exe'
 
 # Chrome options
 options = Options()
@@ -38,10 +43,25 @@ username_input.send_keys("Raishashnk")  # Replace with your IRCTC username
 password_input = driver.find_element(By.XPATH, "/html/body/app-root/app-home/div[3]/app-login/p-dialog[1]/div/div/div[2]/div[2]/div/div[2]/div/div[2]/form/div[3]/input")
 password_input.send_keys("Srk275305@")  # Replace with your IRCTC password
 time.sleep(10)
+
+captcha_element = driver.find_element(By.XPATH, "/html/body/app-root/app-home/div[3]/app-login/p-dialog[1]/div/div/div[2]/div[2]/div/div[2]/div/div[2]/form/div[5]/div/app-captcha/div/div/div[2]/span[1]/img")
+# Take a screenshot of the CAPTCHA and save it
+captcha_element.screenshot("captcha.png")
+# Load the saved image with OpenCV
+image = cv2.imread("captcha.png")
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
+
+# Save the processed image (optional for debugging)
+cv2.imwrite("processed_captcha.png", thresh)
+
+# Extract the CAPTCHA text using Tesseract
+captcha_text = pytesseract.image_to_string(thresh, config='--psm 6').strip()
+print(f"Extracted CAPTCHA: {captcha_text}")
+
 # Pause to manually enter captcha (optional)
-'''captcha_input = driver.find_element(By.ID, "captcha")
-captcha_value = input("aLbgt ")
-captcha_input.send_keys(captcha_value)'''
+captcha_input = driver.find_element(By.XPATH, "/html/body/app-root/app-home/div[3]/app-login/p-dialog[1]/div/div/div[2]/div[2]/div/div[2]/div/div[2]/form/div[5]/div/app-captcha/div/div/input")
+captcha_input.send_keys(captcha_text)
 
 # Click login
 submit_button = driver.find_element(By.XPATH, "/html/body/app-root/app-home/div[3]/app-login/p-dialog[1]/div/div/div[2]/div[2]/div/div[2]/div/div[2]/form/span/button")
@@ -59,10 +79,17 @@ input1.send_keys('ANAND VIHAR TRM - ANVT')
 time.sleep(0.5)
 input1.send_keys(Keys.TAB)
 
-input3 = driver.find_element(By.XPATH, "/html/body/app-root/app-home/div[3]/div/app-main-page/div/div/div[1]/div[1]/div[1]/app-jp-input/div/form/div[2]/div[2]/div[1]/p-calendar/span/input")
-input3.clear()
-input3.send_keys('05/03/2025')
-input1.send_keys(Keys.TAB)
-time.sleep(2)
+#input3 = driver.find_element(By.XPATH, "/html/body/app-root/app-home/div[3]/div/app-main-page/div/div/div[1]/div[1]/div[1]/app-jp-input/div/form/div[2]/div[2]/div[1]/p-calendar/span/input")
+date_input = driver.find_element(By.XPATH, "/html/body/app-root/app-home/div[3]/div/app-main-page/div/div/div[1]/div[2]/div[1]/app-jp-input/div/form/div[2]/div[2]/div[1]/p-calendar/span/input")
+
+date_input.click()
+date_input.send_keys(Keys.CONTROL + "a")  # Select all text
+date_input.send_keys(Keys.DELETE)         # Clear the input
+date_input.send_keys("05/03/2025")
+
+
+dropdown = driver.find_element(By.XPATH, "/html/body/app-root/app-home/div[3]/div/app-main-page/div/div/div[1]/div[2]/div[1]/app-jp-input/div/form/div[3]/div/div/p-dropdown/div")
+dropdown.click()
+time.sleep(1)
 input4 = driver.find_element(By.XPATH, "/html/body/app-root/app-home/div[3]/div/app-main-page/div/div/div[1]/div[2]/div[1]/app-jp-input/div/form/div[5]/div[1]")
 input4.click()

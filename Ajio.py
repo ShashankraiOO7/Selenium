@@ -12,7 +12,7 @@ options.add_argument('--allow-running-insecure-content')
 options.add_argument('--ssl-version-min=tls1.2')
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36")
 options.add_argument("--disable-blink-features=AutomationControlled")
-
+# here we specifiy the exact locatin of google driver after download
 s= Service("C:/Users/Shashank Rai/OneDrive/Desktop/chromedriver.exe")
 driver=webdriver.Chrome(service=s,options=options)
  
